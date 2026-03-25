@@ -1,0 +1,103 @@
+# Fine Tuning de Dataset Alpaca Español
+
+Fine-tuning del Modelo Qwen2.5-3B-Instruct usando el Dataset bertin-project/alpaca-spanish
+
+torch>=2.0.0
+transformers>=4.35.0
+datasets>=2.14.0
+accelerate>=0.24.0
+peft>=0.7.0
+bitsandbytes>=0.41.0
+
+Se puede instalar todo con
+pip install -r requirements.txt
+
+Se probo con las siguientes versiones:
+
+🐍 Python:
+   Versión: 3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]
+
+🔥 PyTorch:
+   Versión: 2.5.1+cu121
+   CUDA disponible: True
+   CUDA versión: 12.1
+   GPU: NVIDIA GeForce RTX 4060 Laptop GPU
+
+🤗 Transformers:
+   Versión: 5.3.0
+
+📊 Datasets:
+   Versión: 4.6.1
+
+⚡ Accelerate:
+   Versión: 1.13.0
+
+🔧 PEFT:
+   Versión: 0.18.1
+
+💾 BitsAndBytes:
+   Versión: 0.49.2
+
+## Entrenamiento
+
+Descarga el modelo Qwen2.5-3B-Instruct
+Se cuantiza a 4-bits QLoRa
+Entrena con los datos del dataset Alpaca Spanish
+Guarda el modelo en ./Qwen2.5-3B-Instruct-4bit-lora/
+
+### Configuracion
+LoRa: rank=4, LoRa_alpha=8
+Batches: 2
+max_length: 128
+
+## Resultado
+
+En general he visto un problema con la repetición de Hashtags y tareas que son más concisas como crear titulares o tweets o respuestas más rápidas, pero en las respuestas más largas se nota el finetuneo por el uso de una estructura que usa el dataset en el razonamiento.
+
+Esto fue un finetuneado rápido de 4 horas (1 epoca) con una configuración de max_length=128 y r=4 (rank del LoRa) aún así se han observado mejoras estructurales, cambiando parametros es posible que mejore los resultados
+
+### Pregunta Genera una nueva oración para comparar los niveles de corrupción en América del Norte y Oriente Medio.
+
+Fine-Tuned:
+
+En comparación con América del Norte, Oriente Medio tiene niveles más altos de corrupción debido a su estructura social compleja e instituciones débiles. El sistema judicial es menos independiente y la justicia no siempre es proporcionada equitativamente. Además, el dinero público suele ser utilizado por aquellos en el poder para fines políticos y financieros. Esto ha llevado a un bajo nivel de confianza pública en las instituciones gubernamentales y una mayor inestabilidad económica generalizada. En América del Norte, los sistemas legales son más fuertes y eficientes, lo que ayuda a mantener un alto nivel de transparencia y equidad. Esto permite a las personas confiar en sus instituciones gubernamentales y ayudar a crear un mercado laboral estable y próspero. Por lo tanto, los niveles de corrupción son más bajos en América del Norte y mayores en Oriente Medio.
+
+Base-Model:
+
+El nivel de corrupción en América del Norte es mucho más bajo que el encontrado en Oriente Medio, donde la falta de transparencia y la falta de regulación son comunes. En contraste, las naciones de América del Norte están mejor equipadas con leyes, instituciones y mecanismos eficientes de gobierno. Por lo tanto, mientras América del Norte está progresando hacia una mayor limpieza e integridad pública, Oriente Medio aún enfrenta grandes desafíos en este campo. Además, debido a sus altas tasas de corrupción, el impacto económico de Oriente Medio se ve profundamente afectado por problemas como la escasez de oportunidades laborales, malos pagos y falta de desarrollo económico. Esto lleva a una sociedad menos inclusiva, en la cual solo unos pocos tienen acceso a la prosperidad. Con América del Norte mejor posicionada para enfrentar estos desafíos, su capacidad para alcanzar resultados positivos es significativamente mayor. El camino hacia un futuro próspero requiere no solo políticas fuertemente reguladoras, sino también una cultura que promueva la honestidad y la integridad. Por lo tanto, mientras América del Norte avanza hacia esta dirección, debe seguir trabajando duro para garantizar que las decisiones públicas reflejen la voluntad del pueblo y sean transparentes y justas. En Oriente Medio, sin embargo, la tarea es enormemente más difícil ya que las condiciones económicas actuales y la falta de infraestructura son una barrera importante para alcanzar una mayor limpieza. Sin embargo, las autoridades deben continuar trabajando incansablemente para establecer normativas efectivas y crear una cultura de buen gobierno, para que así pueda haber una transformación profunda en el sistema y mejorar la vida de los ciudadanos. Al final, ambos continentes pueden aprender mucho mutuamente sobre cómo construir mejores sociedades basadas en la integridad y la transparencia. América del Norte puede proporcionar ideas innovadoras y conocimientos prácticos sobre cómo lograr resultados positivos al reformar su sistema, mientras que Oriente Medio puede enseñarles cómo mantenerse alejados de la corrupción y generar prosperidad económica. Este intercambio de conocimiento y experiencias puede llevar a un cambio en ambas regiones hacia un estado de bienestar generalizado y
+
+Output_dataset:
+
+Los niveles de corrupción en América del Norte generalmente tienden a ser mucho más bajos que los encontrados en Oriente Medio.
+
+### Pregunta Explica las implicaciones éticas de construir un sistema de atención médica controlado por inteligencia artificial
+
+Fine-Tuned:
+El uso de la IA para el desarrollo y operación del sistema de atención médica puede tener implicaciones éticas potencialmente preocupantes. Por ejemplo, los sistemas de atención médica impulsados por IA pueden llevar a una discriminación injusta basada en género, edad o raza. También podrían llevar a decisiones médicas poco precisas debido al sesgo de datos. Además, la automatización podría reducir los costos asociados con la atención médica pero también llevar a la pérdida de empleos. Los sistemas impulsados por IA también deben ser evaluados cuidadosamente para garantizar su neutralidad y evitar cualquier riesgo de que puedan ser utilizados para fines discriminatorios. La regulación adecuada es necesaria para proteger a los pacientes de posibles daños. Las leyes y normativas actuales ya se están adaptando rápidamente a estos nuevos desafíos tecnológicos. Por lo tanto, es importante seguir el proceso legal vigente para asegurar un uso apropiado y responsable de la IA para el desarrollo y operación del sistema de atención médica. 
+
+Además, la IA tiene el potencial de hacer el sistema de atención médica más eficiente al proporcionar servicios médicos más precisos y personalizados, mejorando así el acceso al cuidado médico. El uso de la IA también puede ayudar a prevenir errores humanos y mejorar la calidad del cuidado médico, todo esto contribuye a la mejora general de la salud pública.
+
+Finalmente, la IA puede ayudar a desarrollar nuevas vacunas y tratamientos médicos, aumentando así nuestras capacidades para combatir enfermedades. Esto puede llevar a resultados médicos más precisos y eficientes, mejorando significativamente la calidad de vida de los pacientes. A través de la implementación de sistemas de atención médica impulsados por IA, podemos lograr beneficios reales para la salud y el bienestar de la población. Es necesario asegurarse de que este progreso sea llevado a cabo de manera justa y equitativa. Debe haber un acuerdo general sobre las implicaciones éticas del uso de la IA en el campo de la atención médica antes de poder avanzar hacia un futuro prometedor. En resumen, es posible utilizar la IA para crear un sistema de atención médica más eficiente y justo. No obstante, debe haber un debate abierto y participativo sobre las implicaciones éticas de estos desarrollos. Este análisis abord
+
+Base Model:
+El uso de sistemas de atención médica controlados por inteligencia artificial tiene implicaciones éticas, ya que puede resultar en decisiones basadas en predicciones automatizadas y la falta de conciencia sobre los riesgos potenciales. Además, estos sistemas pueden ser sesgados debido a datos limitados o desequilibrados, lo cual podría llevar a decisiones injustas. Finalmente, el uso excesivo del procesamiento de inteligencia artificial para determinar diagnósticos o tratamientos podría reducir la necesidad de interacción humana entre pacientes y profesionales médicos, lo que es una preocupación ética importante. En general, es necesario garantizar que cualquier tecnología involucrada en el proceso de atención médica sea confiable, transparente y justa. Esto requiere que las personas sepan qué tan segura es una decisión hecha por un modelo de IA y cuál es su impacto real en la salud del paciente. Además, es importante asegurarse de que las decisiones tomadas por modelos de IA sean responsables e informadas por el conocimiento humano. Por último, es importante que los desarrolladores de estos modelos tengan conciencia de los posibles efectos perjudiciales de estas tecnologías y tomen medidas para mitigarlos. Por ejemplo, podrían implementar mecanismos de revisión para evaluar la precisión de los resultados obtenidos por un modelo dado. El objetivo debe ser crear tecnologías que se adapten a las necesidades de los pacientes sin sacrificar su integridad ética. Al hacer esto, podemos maximizar la eficiencia y calidad de la atención médica mientras seguimos siendo conscientes de los riesgos potenciales. Es posible crear tecnologías que permitan a los pacientes acceder a su propia información y tomar sus propias decisiones, pero también es esencial que estemos preparados para enfrentar las consecuencias de esta nueva forma de proporcionar atención médica. Debe haber regulación rigurosa, transparencia en los datos y discusión abierta sobre cómo utilizar este tipo de tecnología para mejorar la atención médica. La finalidad debería ser asegurar que todas las partes interesadas de la atención médica puedan acceder a la tecnología de manera equitativa y justa, y que todos los datos relevantes estén disponibles para todo el mundo. Con el tiempo, es posible que podamos aprovechar al máximo las
+
+Output Real:
+Construir un sistema de atención médica controlado por inteligencia artificial podría tener implicaciones éticas tanto positivas como negativas. En el lado positivo, los sistemas de atención médica controlados por inteligencia artificial podrían permitir un mejor acceso a la atención médica y permitir que los médicos accedan a los datos más rápidamente. En el lado negativo, los sistemas de atención médica controlados por inteligencia artificial pueden llevar al potencial de que los datos de atención médica se utilicen de manera inapropiada y que los algoritmos de inteligencia artificial diagnostiquen mal los casos y cometan errores. También existe la posibilidad de que los sistemas controlados por inteligencia artificial puedan llevar a un aumento en el uso de procedimientos automatizados, lo que podría llevar a menos empleos en la industria de la atención médica. Las implicaciones éticas de este sistema tendrán que ser consideradas para asegurar que cualquier sistema de atención médica controlado por inteligencia artificial sea lo más justo y seguro posible.
+
+### Pregunta Crear un titular de noticias para una historia sobre una celebridad que acaba de publicar un libro. Tom Hanks
+
+Fine tuned:
+Tom Hanks lanza exitosa colección literaria con lanzamiento de su primer libro, "La Vida en la Tierra". El actor, director y guionista ha compartido sus recuerdos personales e historias inspiradoras a través de las páginas de este nuevo libro lleno de vida. La obra está siendo recibida como un éxito del público, generando muchas reseñas positivas y elogios por parte de los lectores. El famoso intérprete tiene previsto presentar el libro en varias ciudades a lo largo de todo el país durante las próximas semanas. Los fanáticos pueden esperar escuchar más de Tom Hanks en esta nueva colección literaria. #TomHanks #VidaEnLaTierra #Libros #LanzamientoDeLibro #RecepciónPositiva #PresentaciónDelLibro #Fanatismo #InterpretaciónDiferencial #Intérpretes #Autoría #Tecnología #CienciaFiccional #CulturaPopular #PublicacionesLiterarias #Celebridades #HistoriaPersonal #HistoriaInspiradora #Guionistas #Directores #PáginaSiguiente #Escritor #Intérprete #Lectores #MensajesPersonales #ColecciónLiteraria #RecuerdosPersonales #HistoriasInspiradoras #PublicacionesLiterarias #Celebridades #VidaEnLaTierra #VidasEnLaTierra #ElaboradasPorTomHanks #TomHanksLanza #TomHanksLanzaSuPrimeraObra #TomHanksEsUnaEstrella #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrimeraObra #TomHanksLanzaSuPrim 
+(Se repite los hashtags y no hace solo un titular)
+
+Base Model:
+¡Tom Hanks lanza su primer libro con éxito: "Una Historia Extraordinaria!" #TOMHANKS #LibroDeTomHanks #UnaHistoriaExtraordinaria #CelebridadesAutoras #TOMHANKSLAUNCHES #TomHanksBook #UnaHistoriaExtraordinaria #LosMásCariñososFans #TomHanksFanFestivals #CelebridadesAutoras #LaLuzEnElVelo #LaLuzEnElVeloPorTomHanks #TomHankstieneUnLibroDeMayorÉxito #TomHanksBookRelease #UnaHistoriaExtraordinariaParaTomHanks #TomHanksBookLaunch #UnaHistoriaExtraordinariaParaTodosNosotros #TomHanksFanClub #TomHanksFanConventions #TomHanksBooks #TomHanksFanFests #TomHanksFanGroups #TomHanksFanBands #TomHanksFanOrganizations #TomHanksFanMeetings #TomHanksFanEvents #TomHanksFanConvention #TomHanksFanMeetups #TomHanksFanGatherings #TomHanksFanTrips #TomHanksFanTravel #TomHanksFanVacations #TomHanksFanExperiences #TomHanksFanLife #TomHanksFanActivities #TomHanksFanStories #TomHanksFanMemories #TomHanksFanVideos #TomHanksFanPhotos #TomHanksFanJokes #TomHanksFanHumor #TomHanksFanQuotes #TomHanksFanSongs #TomHanksFanLyrics #TomHanksFanArt #TomHanksFanCrafts #TomHanksFanDesigns #TomHanksFanDecor #TomHanksFanInteriors #TomHanksFanOutfits #TomHanksFanClothing #TomHanksFanShoes #TomHanksFanJewelry #TomHanksFanAccessories #TomHanksFanGadgets #TomHanksFanTech #TomHanksFanElectronics #TomHanksFanComputers #TomHanksFanSmartphones #TomHanksFanTablets #TomHanksFanLaptops #TomHanksFanWatches #TomHanksFanGlasses #TomHanksFanHeadphones #TomHanksFanSpeakers #TomHanksFanSpeakeasy #TomHanksFanDrinks #TomHanksFanFood #TomHanksFanDesserts #TomHanksFanPast
+
+Output real:
+¡Tom Hanks publica nuevo libro, explorando la 'humanidad, belleza y alegría compartida' de la vida!
+
+
+
+
+
